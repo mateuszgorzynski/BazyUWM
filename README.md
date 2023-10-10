@@ -1,1 +1,1 @@
-# BazyUWM
+# BazyUWM - Mateusz Górzyński
