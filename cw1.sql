@@ -20,11 +20,12 @@ CREATE TABLE countries (
     country_id INT,
     country_name VARCHAR2(50),
     regions_id INT,
-    FOREIGN KEY (regions_id) REFERENCES regions(regions_id)
 );
 
 ALTER TABLE countries
-	ADD PRIMARY KEY (country_id);
+	ADD PRIMARY KEY (country_id),
+	ADD CONSTRAINT (fk_regions)
+    FOREIGN KEY (regions_id) REFERENCES regions(regions_id);
 
 CREATE TABLE locations (
     location_id INT,
@@ -33,22 +34,24 @@ CREATE TABLE locations (
     city VARCHAR2(50),
     state_province VARCHAR2(50),
     country_id INT,
-    FOREIGN KEY (country_id) REFERENCES countries(country_id)
 );
 
 ALTER TABLE locations
-	ADD PRIMARY KEY (location_id);
+	ADD PRIMARY KEY (location_id),
+	ADD CONSTAINT (fk_countries)
+    FOREIGN KEY (country_id) REFERENCES countries(country_id);	
 	
 CREATE TABLE departments (
     department_id INT,
     department_name VARCHAR2(50),
     manager_id INT,
     location_id INT,
-    FOREIGN KEY (location_id) REFERENCES locations(location_id)
 );
 
 ALTER TABLE departments
-	ADD PRIMARY KEY (department_id);
+	ADD PRIMARY KEY (department_id),
+	ADD CONSTAINT (fk_locations)
+	FOREIGN KEY (location_id) REFERENCES locations(location_id);
 
 
 CREATE TABLE employees (
@@ -59,21 +62,25 @@ CREATE TABLE employees (
 	phone_number varchar2(50),
 	hire_date DATE,
 	job_id INT,
-	FOREIGN KEY (job_id) REFERENCES jobs(job_id),
 	salary NUMBER(10,2),
 	commission_pct NUMBER (10,2)
 	manager_id INT,
 	department id INT,
-	FOREIGN KEY (department_id) REFERENCES departments(department_id),
 );
 
 ALTER TABLE employees
 	ADD PRIMARY KEY (employee_id),
-	FOREIGN KEY (manager_id) REFERENCES employees_id(employee_id);
+	ADD CONSTRAINT (fk_manager_id)
+	FOREIGN KEY (manager_id) REFERENCES employees(employee_id),
+	ADD CONSTRAINT (fk_departments)
+	FOREIGN KEY (department_id) REFERENCES departments(department_id),
+	ADD CONSTRAINT (fk_jobs)
+	FOREIGN KEY (job_id) REFERENCES jobs(job_id);
 	
 
 ALTER TABLE departments
-	FOREIGN KEY (manager_id) REFERENCES employee_id(manager_id);
+	ADD CONSTRAINT (fk_employees)
+	FOREIGN KEY (manager_id) REFERENCES employees(manager_id);
 
 
 CREATE TABLE job_history (
@@ -85,6 +92,7 @@ CREATE TABLE job_history (
 );
 
 ALTER TABLE job_history
+	ADD CONSTRAINT (fk_employees)
 	FOREIGN KEY (employee_id) REFERENCES employees_id(employee_id),
 	ADD PRIMARY KEY (employee_id),
 	ADD PRIMARY KEY (start_date);
